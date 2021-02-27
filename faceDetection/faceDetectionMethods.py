@@ -60,7 +60,7 @@ def detectFacesWithDNN(frame):
             box = dnnFaces[0, 0, i, 3:7] * np.array([width, height, width, height])
             (x, y, x1, y1) = box.astype("int")
             cv2.rectangle(frame, (x, y), (x1, y1), (193, 69, 42), 2)
-            # frame = putText(frame, "DNN", x+5, y+x1-5)
+            frame = putText(frame, "DNN", x+5, y+x1-5)
     return frame
 
 
@@ -76,7 +76,7 @@ def detectFacesWithDLIB(frame):
         points = shapePoints(shape)
         (x, y, w, h) = rectPoints(rect)
         cv2.rectangle(frame, (x, y), (x + w, y + h), (193, 69, 42), 2)
-        # frame = putText(frame, "DLIB", x+5, y+h-5)
+        frame = putText(frame, "DLIB", x+5, y+h-5)
     return frame
 
 
@@ -101,4 +101,5 @@ def detectFacesWithMTCNN(frame):
         if face["confidence"] > 0.5:
             x, y, w, h = face['box']
             cv2.rectangle(frame, (x, y), (x + w, y + h), (193, 69, 42), 2)
+            frame = putText(frame, "MTCNN", x+5, y+h-5)
     return frame
