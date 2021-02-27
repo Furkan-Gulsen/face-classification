@@ -1,15 +1,16 @@
 # Importing required packages
+from mtcnn import MTCNN
 import numpy as np
 import dlib
 import cv2
 
 
-def putText(frame, text, x, y, h):
-    color = (108, 72, 200) # It is the color of text string to be drawn
+def putText(frame, text, x, y):
+    color = (193, 69, 42) # It is the color of text string to be drawn
     font = cv2.FONT_HERSHEY_SIMPLEX # It denotes the font type
     thickness = 2 # It is the thickness of the line in px
-    fontScale = 1 # Font scale factor that is multiplied by the font-specific base size
-    org = (x+5, y+h-5) # It is the coordinates of the bottom-left corner of the text string in the image
+    fontScale = 0.75 # Font scale factor that is multiplied by the font-specific base size
+    org = (x, y) # It is the coordinates of the bottom-left corner of the text string in the image
     lineType = cv2.LINE_AA # It gives the type of the line to be used
     cv2.putText(frame, text, org, font, fontScale , color, thickness, lineType)
     return frame
@@ -91,3 +92,14 @@ def detectFacesWithCascade(frame):
         frame = putText(frame, "Haarcascade", x+5, y+h-5)
     return frame
 
+
+
+mtcnnDetector = MTCNN()
+def detectFacesWithMTCNN(frame):
+    result = mtcnnDetector.detect_faces(frame)
+    for res in result and len(result) > 0:
+        bounding_box = res['box']
+        keypoints = res['keypoints']
+        cv2.rectangle(frame, (bounding_box[0], bounding_box[1]), (bounding_box[0]+bounding_box[2],
+        bounding_box[1] + bounding_box[3]), (193, 69, 42), 2)
+    return frame
