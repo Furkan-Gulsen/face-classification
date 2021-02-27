@@ -96,10 +96,9 @@ def detectFacesWithCascade(frame):
 
 mtcnnDetector = MTCNN()
 def detectFacesWithMTCNN(frame):
-    result = mtcnnDetector.detect_faces(frame)
-    for res in result and len(result) > 0:
-        bounding_box = res['box']
-        keypoints = res['keypoints']
-        cv2.rectangle(frame, (bounding_box[0], bounding_box[1]), (bounding_box[0]+bounding_box[2],
-        bounding_box[1] + bounding_box[3]), (193, 69, 42), 2)
+    faces = mtcnnDetector.detect_faces(frame)
+    for face in faces:
+        if face["confidence"] > 0.5:
+            x, y, w, h = face['box']
+            cv2.rectangle(frame, (x, y), (x + w, y + h), (193, 69, 42), 2)
     return frame
