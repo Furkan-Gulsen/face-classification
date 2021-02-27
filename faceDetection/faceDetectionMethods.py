@@ -62,3 +62,19 @@ def detectFacesWithDNN(frame):
             # frame = putText(frame, "DNN", x+5, y+x1-5)
     return frame
 
+
+faceLandmarks = "shape_predictor_68_face_landmarks.dat"
+detector = dlib.get_frontal_face_detector()
+predictor = dlib.shape_predictor(faceLandmarks)
+
+def detectFacesWithDLIB(frame):    
+    grayFrame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    rects = detector(grayFrame, 0)
+    for rect in rects:
+        shape = predictor(grayFrame, rect)
+        points = shapePoints(shape)
+        (x, y, w, h) = rectPoints(rect)
+        cv2.rectangle(frame, (x, y), (x + w, y + h), (193, 69, 42), 2)
+        # frame = putText(frame, "DLIB", x+5, y+h-5)
+    return frame
+
