@@ -78,3 +78,16 @@ def detectFacesWithDLIB(frame):
         # frame = putText(frame, "DLIB", x+5, y+h-5)
     return frame
 
+
+
+faceCascade = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
+
+def detectFacesWithCascade(frame):
+    grayFrame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    faces = faceCascade.detectMultiScale(grayFrame, 1.3, 5)
+    for faceCoordinates in faces:
+        x, y, w, h = faceCoordinates
+        cv2.rectangle(frame, (x, y), (x + w, y + h), (193, 69, 42), 2)
+        frame = putText(frame, "Haarcascade", x+5, y+h-5)
+    return frame
+
