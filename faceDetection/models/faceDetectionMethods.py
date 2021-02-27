@@ -32,9 +32,9 @@ def rectPoints(rect):
 
 
 # pre-trained model
-modelFile = "models/res10_300x300_ssd_iter_140000.caffemodel" 
+modelFile = "models/dnn/res10_300x300_ssd_iter_140000.caffemodel" 
 # prototxt has the information of where the training data is located.
-configFile = "models/deploy.prototxt" 
+configFile = "models/dnn/deploy.prototxt" 
 net = cv2.dnn.readNetFromCaffe(configFile, modelFile)
 
 def detectFacesWithDNN(frame):
@@ -64,7 +64,7 @@ def detectFacesWithDNN(frame):
     return frame
 
 
-faceLandmarks = "shape_predictor_68_face_landmarks.dat"
+faceLandmarks = "models/dlib/shape_predictor_68_face_landmarks.dat"
 detector = dlib.get_frontal_face_detector()
 predictor = dlib.shape_predictor(faceLandmarks)
 
@@ -81,7 +81,7 @@ def detectFacesWithDLIB(frame):
 
 
 
-faceCascade = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
+faceCascade = cv2.CascadeClassifier("models/haarcascade/haarcascade_frontalface_default.xml")
 
 def detectFacesWithCascade(frame):
     grayFrame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -95,6 +95,7 @@ def detectFacesWithCascade(frame):
 
 
 mtcnnDetector = MTCNN()
+
 def detectFacesWithMTCNN(frame):
     faces = mtcnnDetector.detect_faces(frame)
     for face in faces:

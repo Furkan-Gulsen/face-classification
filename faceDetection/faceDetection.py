@@ -1,5 +1,5 @@
 # Importing required packages
-import faceDetectionMethods as fdm
+import models.faceDetectionMethods as fdm
 import argparse
 import cv2
 
