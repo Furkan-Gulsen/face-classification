@@ -1,5 +1,5 @@
 # Importing required packages
-from mtcnn import MTCNN
+from mtcnn.mtcnn import MTCNN
 import numpy as np
 import dlib
 import cv2

@@ -22,7 +22,9 @@ while True:
     if not ret:
         break
 
-    if args["method"].lower() == "dnn":
+    if args["method"] == None:
+        raise ValueError("There is no such method. Please check the models")
+    elif args["method"].lower() == "dnn":
         frame = fdm.detectFacesWithDNN(frame)
     elif args["method"].lower() == "dlib":
         frame = fdm.detectFacesWithDLIB(frame)
@@ -32,6 +34,7 @@ while True:
         frame = fdm.detectFacesWithMTCNN(frame)
     else:
         raise ValueError("There is no such method. Please check the models")
+    
 
     if args["isVideoWriter"] == True:
         videoWrite.write(frame)
