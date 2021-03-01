@@ -8,6 +8,10 @@ ap.add_argument("-m", "--method", type=str, help="choose a face detection patter
 ap.add_argument("-vw", "--isVideoWriter", type=bool, default=False)
 args = vars(ap.parse_args())
 
+# check method
+if args["method"] == None:
+    raise ValueError("There is no such method. Please choose a method.")
+
 
 cap = cv2.VideoCapture(0)
 
@@ -22,9 +26,7 @@ while True:
     if not ret:
         break
 
-    if args["method"] == None:
-        raise ValueError("There is no such method. Please check the models")
-    elif args["method"].lower() == "dnn":
+    if args["method"].lower() == "dnn":
         frame = fdm.detectFacesWithDNN(frame)
     elif args["method"].lower() == "dlib":
         frame = fdm.detectFacesWithDLIB(frame)
