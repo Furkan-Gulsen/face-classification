@@ -38,11 +38,12 @@ faceLandmarks = "faceDetection/models/dlib/shape_predictor_68_face_landmarks.dat
 detector = dlib.get_frontal_face_detector()
 predictor = dlib.shape_predictor(faceLandmarks)
 
-emotionModelPath = 'fer2013_mini_XCEPTION.110-0.65.hdf5'
+emotionModelPath = 'model.hdf5' # fer2013_mini_XCEPTION.110-0.65
 emotionClassifier = load_model(emotionModelPath, compile=False)
 emotionTargetSize = emotionClassifier.input_shape[1:3]
 
 cap = cv2.VideoCapture(0)
+
 if args["isVideoWriter"] == True:
     fourrcc = cv2.VideoWriter_fourcc("M","J","P","G")
     capWidth = int(cap.get(3))
@@ -51,9 +52,11 @@ if args["isVideoWriter"] == True:
 
 while True:
     ret, frame = cap.read()
+    frame = cv2.resize(frame, (720,480))
+
     if not ret:
         break
-    
+
     grayFrame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     rgbFrame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     rects = detector(grayFrame, 0)
@@ -74,11 +77,15 @@ while True:
         grayFace = np.expand_dims(grayFace, -1)
         emotion_prediction = emotionClassifier.predict(grayFace)
         emotion_probability = np.max(emotion_prediction)
-        emotion_label_arg = np.argmax(emotion_prediction)
-        color = emotions[emotion_label_arg]['color']
-        cv2.rectangle(frame, (x, y), (x + w, y + h), color, 2)
-        cv2.putText(frame, emotions[emotion_label_arg]['emotion'], (x+5, y+h-5),
-        cv2.FONT_HERSHEY_SIMPLEX, 0.5 , color, 1, cv2.LINE_AA)
+        if(emotion_probability > 0.36):
+            emotion_label_arg = np.argmax(emotion_prediction)
+            color = emotions[emotion_label_arg]['color']
+            cv2.rectangle(frame, (x, y), (x + w, y + h), color, 2)
+            cv2.putText(frame, emotions[emotion_label_arg]['emotion'], (x+5, y+h-5),
+            cv2.FONT_HERSHEY_SIMPLEX, 0.5 , color, 1, cv2.LINE_AA)
+        else:
+            color = (245, 95, 227)
+            cv2.rectangle(frame, (x, y), (x + w, y + h), color, 2)
 
     if args["isVideoWriter"] == True:
         videoWrite.write(frame)
