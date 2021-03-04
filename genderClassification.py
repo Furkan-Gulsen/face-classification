@@ -28,11 +28,14 @@ faceLandmarks = "faceDetection/models/dlib/shape_predictor_68_face_landmarks.dat
 detector = dlib.get_frontal_face_detector()
 predictor = dlib.shape_predictor(faceLandmarks)
 
-genderModelPath = 'models/genderModel.hdf5'
+genderModelPath = 'models/genderModel_VGG16.hdf5'
 genderClassifier = load_model(genderModelPath, compile=False)
 genderTargetSize = genderClassifier.input_shape[1:3]
 
-label = {0:"Female",1:"Male"} 
+genders =  {
+    0: { "label": "Female", "color": (245,215,130) },
+    1: { "label": "Male", "color": (148,181,192) },
+}
 
 cap = cv2.VideoCapture(0)
 
@@ -53,7 +56,7 @@ while True:
         shape = predictor(frame, rect)
         points = shapePoints(shape)
         (x, y, w, h) = rectPoints(rect)
-        resized = frame[y: y+h, x:x+w]
+        resized = frame[y-20: y+h+20, x-20:x+w-20]
         try:
             frame_resize = cv2.resize(resized, genderTargetSize)
         except:
@@ -61,22 +64,25 @@ while True:
 
         frame_resize = frame_resize.astype('float32')
         frame_scaled = frame_resize/255.0
-        frame_reshape = np.reshape(frame_scaled,(1, 150, 150 ,3))
+        frame_reshape = np.reshape(frame_scaled,(1, 100, 100 ,3))
         frame_vstack = np.vstack([frame_reshape])
         gender_prediction = genderClassifier.predict(frame_vstack)
         gender_probability = np.max(gender_prediction)
-        if(gender_probability > 0.5):
-            gender_result = label[np.argmax(gender_prediction)]
-            cv2.putText(frame, gender_result , (x+5, y+h-5),
-                cv2.FONT_HERSHEY_SIMPLEX, 1 , (218, 229, 97), 2, cv2.LINE_AA)
-            cv2.rectangle(frame, (x, y), (x + w, y + h), (218, 229, 97), 2)
+        color = (255,255,255)
+        if(gender_probability > 0.6):
+        	gender_label = np.argmax(gender_prediction)
+        	gender_result = genders[gender_label]["label"]
+        	color = genders[gender_label]["color"]
+        	cv2.putText(frame, gender_result , (x+5, y+h-5),
+        		cv2.FONT_HERSHEY_SIMPLEX, 1 , color, 2, cv2.LINE_AA)
+        	cv2.rectangle(frame, (x, y), (x + w, y + h), color, 2)
         else:
-            cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 255, 255), 2)
+        	cv2.rectangle(frame, (x, y), (x + w, y + h), color, 2)
 
     if args["isVideoWriter"] == True:
         videoWrite.write(frame)
 
-    cv2.imshow("Emotion Recognition", frame)
+    cv2.imshow("Gender Classification", frame)
     k = cv2.waitKey(1) & 0xFF
     if k == 27:
     	break
