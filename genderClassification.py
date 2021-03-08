@@ -28,7 +28,7 @@ faceLandmarks = "faceDetection/models/dlib/shape_predictor_68_face_landmarks.dat
 detector = dlib.get_frontal_face_detector()
 predictor = dlib.shape_predictor(faceLandmarks)
 
-genderModelPath = 'models/genderModel_VGG16.hdf5'
+genderModelPath = 'agegender_age101_squeezenet.hdf5'
 genderClassifier = load_model(genderModelPath, compile=False)
 genderTargetSize = genderClassifier.input_shape[1:3]
 
