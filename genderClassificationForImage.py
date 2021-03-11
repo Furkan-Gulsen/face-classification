@@ -3,7 +3,6 @@ from keras.models import load_model
 import numpy as np
 import dlib
 import cv2
-import pyshine as ps
 
 def shapePoints(shape):
 	coords = np.zeros((68, 2), dtype="int")
@@ -59,7 +58,7 @@ def detectFacesWithDNN(frame):
 		if confidence > 0.5:
 			box = dnnFaces[0, 0, i, 3:7] * np.array([width, height, width, height])
 			(x, y, x1, y1) = box.astype("int")
-			resized = frame[y-20: y1+30, x-10:x1+10]
+			resized = frame[y: y1, x:x1]
 			try:
 				frame_resize = cv2.resize(resized, genderTargetSize)
 			except:
@@ -77,31 +76,15 @@ def detectFacesWithDNN(frame):
 				gender_label = np.argmax(gender_prediction)
 				gender_result = genders[gender_label]["label"]
 				color = genders[gender_label]["color"]
-				cv2.rectangle(frame, (x+20, y1+20), (x+130, y1+55) , color, -1)
-				cv2.line(frame, (x, y1), (x+20, y1+20), color , thickness=2)
-				cv2.putText(frame, gender_result , (x+25,  y1+45),
-					cv2.FONT_HERSHEY_SIMPLEX, 0.8 , (255,255,255), 2, cv2.LINE_AA)
+				cv2.putText(frame, gender_result , (x+5, y1-5),
+				cv2.FONT_HERSHEY_SIMPLEX, 1 , color, 2,   cv2.LINE_AA)
 				cv2.rectangle(frame, (x, y), (x1, y1), color, 2)
 			else:
 				cv2.rectangle(frame, (x, y), (x1, y1), color, 2)
 	return frame
 
-
-cap = cv2.VideoCapture(0)
-
-while True:
-	ret, frame = cap.read()
-	# frame = cv2.resize(frame, (720,420))
-
-	if not ret:
-		break
-
-	frame = detectFacesWithDNN(frame)
-	cv2.imshow("Gender Classification", frame)
-	k = cv2.waitKey(1) & 0xFF
-	if k == 27:
-		break
-
-
-cap.release()
-cv2.destroyAllWindows()
+photo = cv2.imread("images/photo1.jpg")
+photo = cv2.resize(photo, (1080,720))
+frame = detectFacesWithDNN(photo)
+cv2.imshow("Gender Classification", frame)
+cv2.waitKey(0)
