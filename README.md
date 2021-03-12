@@ -25,3 +25,12 @@
 <p>
   I experimented with transfer learning models. I used the Xception model in this section because it gives the best result.
 </p>
+
+If you want to run real time face emotion recognition:
+```python
+python emotionRecognitionWithDNN.py
+```
+or
+```python
+python emotionRecognitionWithDLIB.py
+```
