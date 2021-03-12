@@ -50,7 +50,7 @@ python emotionRecognition.py
   I experimented with transfer learning models. I used the VGG16 model in this section because it gives the best result.
 </p>
 
-If you want to run real time face emotion recognition:
+If you want to run real time gender classificatin:
 ```python
 python genderClassificationWithDNN.py
 ```
