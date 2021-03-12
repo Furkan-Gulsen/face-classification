@@ -28,9 +28,42 @@
 
 If you want to run real time face emotion recognition:
 ```python
-python emotionRecognitionWithDNN.py
+python emotionRecognition.py
+```
+
+<h2> Gender Classification </h2>
+<img src="https://github.com/Furkan-Gulsen/face-classification/blob/main/outputs/GenderClassificationOutput.gif?raw=true" />
+<p>
+  I used only Transfer Learning models in this project to get faster and better results.
+  For Gender Classification:
+</p>
+<ul>
+  <li>VGG16,</li>
+  <li>VGG19,</li>
+  <li>ResNet,</li>
+  <li>Inception,</li>
+  <li>Xception,</li>
+</ul>
+<p>
+  I experimented with transfer learning models. I used the VGG16 model in this section because it gives the best result.
+</p>
+
+If you want to run real time face emotion recognition:
+```python
+python genderClassificationWithDNN.py
 ```
 or
 ```python
-python emotionRecognitionWithDLIB.py
+python genderClassificationWithDLIB.py
 ```
+
+
+
+
+
+
+
+
+
+
+
