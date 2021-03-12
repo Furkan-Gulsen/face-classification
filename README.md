@@ -31,6 +31,8 @@ If you want to run real time face emotion recognition:
 python emotionRecognition.py
 ```
 
+---
+
 <h2> Gender Classification </h2>
 <img src="https://github.com/Furkan-Gulsen/face-classification/blob/main/outputs/GenderClassificationOutput.gif?raw=true" />
 <p>
