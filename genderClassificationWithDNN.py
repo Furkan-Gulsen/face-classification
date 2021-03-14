@@ -1,18 +1,7 @@
 # Importing required packages
 from keras.models import load_model
 import numpy as np
-import dlib
 import cv2
-import pyshine as ps
-
-
-def rectPoints(rect):
-    x = rect.left()
-    y = rect.top()
-    w = rect.right() - x
-    h = rect.bottom() - y
-    return (x, y, w, h)
-
 
 genderModelPath = 'models\genderModel_VGG16.hdf5'
 genderClassifier = load_model(genderModelPath, compile=False)
@@ -100,7 +89,7 @@ while True:
 
     frame = detectFacesWithDNN(frame)
     cv2.imshow("Gender Classification", frame)
-    k = cv2.waitKey(1) & 0xFF
+    k = cv2.waitKey(10) & 0xFF
     if k == 27:
         break
 
