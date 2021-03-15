@@ -1,6 +1,7 @@
 # Importing required packages
 import numpy as np
 import cv2
+from genderClassification import GenderClassification
 
 
 class FaceProcess:
@@ -50,4 +51,7 @@ class FaceProcess:
                 color = (245, 215, 130)
                 resized = self.frame[y - 20:y1 + 30, x - 10:x1 + 10]
                 cv2.rectangle(self.frame, (x, y), (x1, y1), color, 2)
+                gender_result = GenderClassification(resized, x, y, x1,
+                                                     y1).predict()
+
         return self.frame
