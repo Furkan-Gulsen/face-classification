@@ -51,7 +51,19 @@ class FaceProcess:
                 color = (245, 215, 130)
                 resized = self.frame[y - 20:y1 + 30, x - 10:x1 + 10]
                 cv2.rectangle(self.frame, (x, y), (x1, y1), color, 2)
-                gender_result = GenderClassification(resized, x, y, x1,
-                                                     y1).predict()
+                try:
+                    gender_result = GenderClassification(
+                        resized, x, y, x1, y1).predict()
+                except:
+                    continue
+
+                cv2.rectangle(self.frame, (x + 20, y1 + 20),
+                              (x + 170, y1 + 55), gender_result['color'], -1)
+                cv2.line(self.frame, (x, y1), (x + 20, y1 + 20),
+                         gender_result['color'],
+                         thickness=2)
+                cv2.putText(self.frame, '{}'.format(gender_result['label']),
+                            (x + 25, y1 + 45), cv2.FONT_HERSHEY_SIMPLEX, 0.8,
+                            (255, 255, 255), 2, cv2.LINE_AA)
 
         return self.frame
