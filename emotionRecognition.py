@@ -104,9 +104,14 @@ while True:
             emotion_label_arg = np.argmax(emotion_prediction)
             color = emotions[emotion_label_arg]['color']
             cv2.rectangle(frame, (x, y), (x + w, y + h), color, 2)
+            cv2.line(frame, (x, y + h), (x + 20, y + h + 20),
+                     color,
+                     thickness=2)
+            cv2.rectangle(frame, (x + 20, y + h + 20), (x + 110, y + h + 40),
+                          color, -1)
             cv2.putText(frame, emotions[emotion_label_arg]['emotion'],
-                        (x + 5, y + h - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.5,
-                        color, 1, cv2.LINE_AA)
+                        (x + 25, y + h + 36), cv2.FONT_HERSHEY_SIMPLEX, 0.5,
+                        (255, 255, 255), 1, cv2.LINE_AA)
         else:
             color = (255, 255, 255)
             cv2.rectangle(frame, (x, y), (x + w, y + h), color, 2)
