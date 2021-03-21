@@ -3,7 +3,7 @@ from keras.models import load_model
 import numpy as np
 import cv2
 
-genderModelPath = 'models/age_model_with_vgg16.h5'
+genderModelPath = 'models/age_model_with_smallerVGG.h5'
 genderClassifier = load_model(genderModelPath, compile=False)
 genderTargetSize = genderClassifier.input_shape[1:3]
 
@@ -37,9 +37,9 @@ def detectFacesWithDNN(frame):
             box = dnnFaces[0, 0, i, 3:7] * np.array(
                 [width, height, width, height])
             (x, y, x1, y1) = box.astype("int")
-            resized = frame[y - 20:y1 + 30, x - 10:x1 + 10]
+            resized = frame[y:y1, x:x1]
             try:
-                frame_resize = cv2.resize(resized, (100, 100))
+                frame_resize = cv2.resize(resized, genderTargetSize)
             except:
                 continue
 
@@ -48,7 +48,10 @@ def detectFacesWithDNN(frame):
             frame_reshape = np.reshape(frame_scaled, (1, 100, 100, 3))
             frame_vstack = np.vstack([frame_reshape])
             gender_prediction = genderClassifier.predict(frame_vstack)
-
+            gender_probability = np.max(gender_prediction)
+            color = (255, 255, 255)
+            if (gender_probability > 0.4):
+                print("gender_prediction", np.argmax(gender_prediction))
     return frame
 
 
