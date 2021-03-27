@@ -4,6 +4,11 @@ import numpy as np
 import dlib
 import cv2
 
+prediction_labels = [
+    "generation z", "generation y", "generation x", "baby boomers",
+    "the silent generation"
+]
+
 
 def shapePoints(shape):
     coords = np.zeros((68, 2), dtype="int")
@@ -24,9 +29,9 @@ faceLandmarks = "faceDetection/models/dlib/shape_predictor_68_face_landmarks.dat
 detector = dlib.get_frontal_face_detector()
 predictor = dlib.shape_predictor(faceLandmarks)
 
-emotionModelPath = 'models/age_prediction_with_cnn.h5'  # fer2013_mini_XCEPTION.110-0.65
-emotionClassifier = load_model(emotionModelPath, compile=False)
-emotionTargetSize = emotionClassifier.input_shape[1:3]
+ageModelPath = 'models/age_model_with_cnn.h5'
+agePrediction = load_model(ageModelPath, compile=False)
+ageTargetSize = agePrediction.input_shape[1:3]
 
 cap = cv2.VideoCapture(0)
 while True:
@@ -44,21 +49,33 @@ while True:
         (x, y, w, h) = rectPoints(rect)
         grayFace = grayFrame[y:y + h, x:x + w]
         try:
-            grayFace = cv2.resize(grayFace, (48, 48))
+            grayFace = cv2.resize(grayFace, (ageTargetSize))
         except:
             continue
 
         grayFace = grayFace.reshape(-1, 48, 48, 1)
-        emotion_prediction = emotionClassifier.predict(grayFace)
-        emotion_probability = np.max(emotion_prediction)
-        if (emotion_probability > 0.45):
-            emotion_label_arg = np.argmax(emotion_prediction)
-            color = (100, 100, 100)
-            cv2.putText(frame, str(emotion_label_arg), (x + 25, y + h + 36),
+        age_prediction = agePrediction.predict(grayFace)
+        age_probability = np.max(age_prediction)
+        color = (23, 164, 28)
+
+        if (age_probability > 0.45):
+            prediction = np.argmax(age_prediction)
+            result = prediction_labels[prediction]
+
+            cv2.rectangle(frame, (x, y), (x + w, y + h), (color), 2)
+            cv2.line(frame, (x, y + h), (x + 20, y + h + 20),
+                     color,
+                     thickness=2)
+            cv2.rectangle(frame, (x + 20, y + h + 20), (x + 135, y + h + 40),
+                          color, -1)
+            cv2.putText(frame, result, (x + 25, y + h + 36),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1,
                         cv2.LINE_AA)
+        else:
+            color = (255, 255, 255)
+            cv2.rectangle(frame, (x, y), (x + w, y + h), color, 2)
 
-    cv2.imshow("Emotion Recognition", frame)
+    cv2.imshow("Age Prediction", frame)
     k = cv2.waitKey(1) & 0xFF
     if k == 27:
         break
