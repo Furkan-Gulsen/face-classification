@@ -61,7 +61,7 @@ faceLandmarks = "faceDetection/models/dlib/shape_predictor_68_face_landmarks.dat
 detector = dlib.get_frontal_face_detector()
 predictor = dlib.shape_predictor(faceLandmarks)
 
-emotionModelPath = 'models/emotionModel.hdf5'  # fer2013_mini_XCEPTION.110-0.65
+emotionModelPath = 'models/emotionModel.hdf5'
 emotionClassifier = load_model(emotionModelPath, compile=False)
 emotionTargetSize = emotionClassifier.input_shape[1:3]
 

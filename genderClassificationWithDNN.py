@@ -26,15 +26,8 @@ net = cv2.dnn.readNetFromCaffe(configFile, modelFile)
 
 
 def detectFacesWithDNN(frame):
-    # A neural network that really supports the input value
     size = (300, 300)
-
-    # After executing the average reduction, the image needs to be scaled
     scalefactor = 1.0
-
-    # These are our mean subtraction values. They can be a 3-tuple of the RGB means or
-    # they can be a single value in which case the supplied value is subtracted from every
-    # channel of the image.
     swapRB = (104.0, 117.0, 123.0)
 
     height, width = frame.shape[:2]
