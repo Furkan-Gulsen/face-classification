@@ -1,0 +1,4 @@
+tensorflow
+Keras == 2.1.6
+h5py < 3.0.0
+opencv-python == 4.4.0.42
